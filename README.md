@@ -1,11 +1,11 @@
-Các bước:
+B1: Edit .env file
 
-B1: Chạy lệnh "npm i"
+B2: Get all IDs
 
-B2: Lấy mã môn học
-  - đã được lấy sẵn và để trong file id.js, trong đó đã bỏ các môn ESPD
-  - hoặc vào file getID.js, copy toàn bộ nội dung, dán vào inspect trang đăng kí môn học và tự get ID
+B3: "npm i"
 
-B3: Vào file .env và sửa thông tin đăng nhập
+B4: npm run dev
 
-B4: Chạy lệnh "npm run dev"
+* Note:
+Token will be written in token.txt file
+Result will be written in ketQuaDangKy.txt file
