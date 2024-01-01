@@ -1,6 +1,7 @@
 require('dotenv').config();
 const fs = require('fs').promises;
 const qs = require('qs');
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 const arr = require('./id.js');
 
