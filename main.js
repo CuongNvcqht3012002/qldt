@@ -3,7 +3,9 @@ const fs = require('fs').promises;
 const qs = require('qs');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
-const arr = require('./id.js');
+const arr1 = require('./id.js');
+// Arr2 is subjects that are marked
+const arr2 = require('./id2.js');
 
 let token;
 
@@ -79,7 +81,7 @@ async function callAPI(url, data) {
   }
 }
 
-async function dangKyMon(listId) {
+async function dangKyMon(listId, isSync) {
   const firstId = listId[0];
   const secondArray = [...listId.slice(1)];
 
@@ -92,19 +94,31 @@ async function dangKyMon(listId) {
   };
   await callAPI('http://qldt.hanu.vn/api/dkmh/w-xulydkmhsinhvien', data);
 
-  // Create an array of promises for the second array of ids
-  const promises = secondArray.map((id) => {
-    const data = {
-      filter: {
-        id_to_hoc: id,
-        is_checked: true,
-      },
-    };
-    return callAPI('http://qldt.hanu.vn/api/dkmh/w-xulydkmhsinhvien', data);
-  });
+  if (isSync) {
+    for (const id of secondArray) {
+      const data = {
+        filter: {
+          id_to_hoc: id,
+          is_checked: true,
+        },
+      };
+      await callAPI('http://qldt.hanu.vn/api/dkmh/w-xulydkmhsinhvien', data);
+    }
+  } else {
+    // Create an array of promises for the second array of ids
+    const promises = secondArray.map((id) => {
+      const data = {
+        filter: {
+          id_to_hoc: id,
+          is_checked: true,
+        },
+      };
+      return callAPI('http://qldt.hanu.vn/api/dkmh/w-xulydkmhsinhvien', data);
+    });
 
-  // Wait for all the promises to resolve using Promise.all
-  await Promise.all(promises);
+    // Wait for all the promises to resolve using Promise.all
+    await Promise.all(promises);
+  }
 
   console.log('\nCalling the result API...');
   await ketQuaDangKy();
@@ -157,7 +171,9 @@ async function run() {
   }
 
   console.log('\nCalling dang ky...');
-  await dangKyMon(arr);
+  // dangKyMon(listId, isSync)
+  await dangKyMon(arr2, false);
+  // await dangKyMon(arr1, true);
 
   console.log('\nDone.');
 }
